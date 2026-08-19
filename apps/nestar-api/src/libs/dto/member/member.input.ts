@@ -41,5 +41,5 @@ export class LoginInput {
     @Length(5, 12)
     @Field(() => String)
     memberPassword: string;
-
+    
 }
