@@ -25,7 +25,7 @@ export class MemberService {
 
     public async login(input: LoginInput): Promise<Member> {
         const { memberNick, memberPassword } = input;
-        const response: Member = await this.memberModel
+        const response = await this.memberModel
             .findOne({ memberNick: memberNick })
             .select('+memberPassword')
             .exec();
@@ -36,7 +36,7 @@ export class MemberService {
             throw new InternalServerErrorException(Message.BLOCKED_USER);
         }
 
-        const isMatch = await this.authService.comparePasswords(input.memberPassword, response.memberPassword);
+        const isMatch = await this.authService.comparePasswords(memberPassword, response.memberPassword!);
         if (!isMatch) throw new InternalServerErrorException(Message.WRONG_PASSWORD);
         response.accessToken = await this.authService.createToken(response);
 
