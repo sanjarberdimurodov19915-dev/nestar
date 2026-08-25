@@ -19,7 +19,7 @@ import { response } from 'express';
       uploads: false,
       autoSchemaFile: true,
       formatError: (error: T) => {
-        console.log('error:', error);
+        // console.log('error:', error);
         const graphQLFormattedError = {
           code: error?.extensions.code,
           message: 
