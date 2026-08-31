@@ -7,9 +7,9 @@ import type { ObjectId } from "mongoose";
 @InputType()
 export class MemberUpdate {
 
-    @IsNotEmpty()
-    @Field(() => String)
-    _id: ObjectId;
+    @IsOptional()
+    @Field(() => String, { nullable: true })
+    _id?: ObjectId;
 
     @IsOptional()
     @Field(() => MemberType, { nullable: true })

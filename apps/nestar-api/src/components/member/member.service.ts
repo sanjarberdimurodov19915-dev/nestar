@@ -66,14 +66,14 @@ export class MemberService {
         return result;
     }
 
-    public async getMember(memberId: ObjectId, targetId: ObjectId): Promise<Member> {
+    public async getMember(memberId: ObjectId | null | undefined, targetId: ObjectId): Promise<Member> {
         const search: T = {
             _id: targetId,
             memberStatus: {
                 $in: [MemberStatus.ACTIVE, MemberStatus.BLOCK],
             },
         };
-        const targetMember = await this.memberModel.findOne(search).lean().exec();
+        const targetMember = await this.memberModel.findOne(search).lean().exec() as Member | null;
         if(!targetMember) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
         
         if(memberId) {
@@ -96,8 +96,8 @@ export class MemberService {
         return targetMember;
     }
 
-    public async getAgents(memberId: ObjectId, input: AgentsInquiry): Promise<Members> {
-        const { text } = input.search;
+    public async getAgents(memberId: ObjectId | null | undefined, input: AgentsInquiry): Promise<Members> {
+        const text = input.search?.text ?? '';
         const match: T = {
             memberType: MemberType.AGENT,
             memberStatus: MemberStatus.ACTIVE,
@@ -130,7 +130,7 @@ export class MemberService {
 
 
     public async getAllMembersByAdmin(input: MembersInquiry): Promise<Members> {
-        const { memberStatus, memberType, text } = input.search;
+        const { memberStatus, memberType, text } = input.search ?? {};
         const match: T = {};
 
         const sort: T = {
@@ -160,7 +160,7 @@ export class MemberService {
     }
 
     public async updateMemberByAdmin(input: MemberUpdate): Promise<Member> {
-        const result: Member = await this.memberModel
+        const result = await this.memberModel
         .findOneAndUpdate(
             {
                 _id: input._id,
@@ -169,7 +169,7 @@ export class MemberService {
             {
                 new: true,
             },
-        ).exec();
+        ).exec() as Member | null;
         if(!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
         return result;
     }
@@ -177,14 +177,16 @@ export class MemberService {
 
     public async memberStatsEditor(input: StatisticModifier): Promise<Member> {
         const { _id, targetKey, modifier } = input;
-        return await this.memberModel
+        const result = await this.memberModel
         .findOneAndUpdate(
             _id,
             { 
                 $inc: { [targetKey]: modifier }, 
             },
             { new: true },
-        ).exec();
+        ).exec() as Member | null;
+        if (!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
+        return result;
     }
 
 

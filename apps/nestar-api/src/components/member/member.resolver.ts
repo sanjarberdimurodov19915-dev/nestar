@@ -53,8 +53,8 @@ export class MemberResolver {
     @Mutation(() => Member)
     public async updateMember(@Args("input") input: MemberUpdate, @AuthMember('_id') memberId: ObjectId): Promise<Member> {
         console.log('Mutation: updateMember');
-        delete input._id;
-        return await this.memberService.updateMember(memberId, input);
+        const { _id, ...memberInput } = input;
+        return await this.memberService.updateMember(memberId, memberInput);
     }
 
     @UseGuards(WithoutGuard)
@@ -96,7 +96,7 @@ export class MemberResolver {
 
     /** Uploader **/
     @UseGuards(AuthGuard)
-    @Mutation((returns) => String)
+    @Mutation(() => String)
     public async imageUploader(
         @Args({ name: 'file', type: () => GraphQLUpload })
         { createReadStream, filename, mimetype }: FileUpload,
@@ -124,7 +124,7 @@ export class MemberResolver {
     }
 
     @UseGuards(AuthGuard)
-    @Mutation((returns) => [String])
+    @Mutation(() => [String])
     public async imagesUploader(
         @Args('files', { type: () => [GraphQLUpload] })
         files: Promise<FileUpload>[],
@@ -132,10 +132,10 @@ export class MemberResolver {
         ): Promise<string[]> {
             console.log('Mutation: imagesUploader');
 
-            const uploadedImages = [];
-            const promisedList = files.map(async (img: Promise<FileUpload>, index: number): Promise<Promise<void>> => {
+            const uploadedImages: string[] = [];
+            const promisedList = files.map(async (img: Promise<FileUpload>, index: number): Promise<void> => {
                 try {
-                    const { filename, mimetype, encoding, createReadStream } = await img;
+                    const { filename, mimetype, createReadStream } = await img;
 
                     const validMime = validMimeTypes.includes(mimetype);
                     if (!validMime) throw new Error(Message.PROVIDE_ALLOWED_FORMAT);
