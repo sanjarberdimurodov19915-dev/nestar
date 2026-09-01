@@ -99,3 +99,5 @@ export class Members {
     @Field(() => [TotalCounter], { nullable: true })
     metaCounter: TotalCounter[];
 }
+
+export { MemberType };
