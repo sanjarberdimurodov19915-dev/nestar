@@ -6,6 +6,8 @@ import { MemberModule } from '../member/member.module';
 import BoardArticleSchema from '../../schemas/BoardArticle.model';
 import { BoardArticleResolver } from './board-article.resolver';
 import { BoardArticleService } from './board-article.service';
+import { Like } from '../../libs/dto/like/like';
+import { LikeModule } from '../like/like.module';
 
 @Module({
     imports: [
@@ -17,6 +19,7 @@ import { BoardArticleService } from './board-article.service';
         AuthModule,
         MemberModule,
         ViewModule,
+        LikeModule,
     ],
   providers: [BoardArticleResolver, BoardArticleService],
   exports: [BoardArticleService],
