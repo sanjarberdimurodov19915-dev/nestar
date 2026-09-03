@@ -1,8 +1,8 @@
 import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { LikeService } from '../like/like.service';
 import { InjectModel } from '@nestjs/mongoose';
-import type { Model, ObjectId } from 'mongoose';
-import type { BoardArticle, BoardArticles } from '../../libs/dto/board-article/board-article';
+import { Model, ObjectId } from 'mongoose';
+import { BoardArticle, BoardArticles } from '../../libs/dto/board-article/board-article';
 import { BoardArticleStatus } from '../../libs/enums/board-article.enum';
 import { MemberService } from '../member/member.service';
 import { ViewService } from '../view/view.service';
@@ -47,7 +47,7 @@ export class BoardArticleService {
             articleStatus: BoardArticleStatus.ACTIVE,
         };
 
-        const targetBoardArticle = await this.boardArticleModel.findOne(search).lean().exec();
+        const targetBoardArticle = await this.boardArticleModel.findOne(search).lean().exec() as BoardArticle | null;
         if (!targetBoardArticle) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
 
         if (memberId) {
@@ -59,6 +59,12 @@ export class BoardArticleService {
             }
 
             // meLiked
+            const likeInput = {
+                memberId: memberId,
+                likeRefId: articleId,
+                likeGroup: LikeGroup.ARTICLE,
+            };
+            targetBoardArticle.meLiked = await this.likeService.checkLikeExistence(likeInput);
         }
 
         targetBoardArticle.memberData = await this.memberService.getMember(null, targetBoardArticle.memberId) as any;
