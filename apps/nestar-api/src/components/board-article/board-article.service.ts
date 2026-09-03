@@ -123,7 +123,7 @@ export class BoardArticleService {
         return result[0];
     }
 
-    public async likeTargetMember(memberId: ObjectId, likeRefId: ObjectId): Promise<BoardArticle> {
+    public async likeTargetBoardArticle(memberId: ObjectId, likeRefId: ObjectId): Promise<BoardArticle> {
             const target: BoardArticle = await this.boardArticleModel.findOne({ _id: likeRefId, articleStatus: BoardArticleStatus.ACTIVE }).exec();
             if (!target) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
     
@@ -137,7 +137,7 @@ export class BoardArticleService {
             const modifier: number = await this.likeService.toggleLike(input);
             const result = await this.boardArticleStatsEditor({
                 _id: likeRefId,
-                targetKey: 'boardArticleLikes',
+                targetKey: 'articleLikes',
                 modifier: modifier,
             });
     
