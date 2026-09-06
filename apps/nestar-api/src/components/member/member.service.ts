@@ -15,6 +15,7 @@ import { LikeInput } from '../../libs/dto/like/like.input';
 import { LikeGroup } from '../../libs/enums/like.enum';
 import { LikeService } from '../like/like.service';
 import { Follower, Following, MeFollowed } from '../../libs/dto/follow/follow';
+import { lookupAuthMemberLiked } from '../../libs/config';
 
 
 @Injectable()
@@ -120,7 +121,7 @@ export class MemberService {
         return result ? [{ followerId: followerId, followingId: followingId, myFollowing: true }] : [];
     }
 
-    public async getAgents(memberId: ObjectId | null | undefined, input: AgentsInquiry): Promise<Members> {
+    public async getAgents(memberId: ObjectId, input: AgentsInquiry): Promise<Members> {
         const text = input.search?.text ?? '';
         const match: T = {
             memberType: MemberType.AGENT,
@@ -144,6 +145,7 @@ export class MemberService {
                         $skip: (input.page - 1) * input.limit }, 
                         { $limit: input.limit },
                         // meLiked
+                        lookupAuthMemberLiked(memberId),
                     ],
                     metaCounter: [{ $count: 'total' }],
                    },
