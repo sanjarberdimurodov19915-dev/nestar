@@ -9,6 +9,7 @@ import { ComponentsModule } from './components/components.module';
 import { DatabaseModule } from './database/database.module';
 import { T } from './libs/types/common';
 import { response } from 'express';
+import { SocketModule } from './socket/socket.module';
 
 @Module({
   imports: [
@@ -30,36 +31,36 @@ import { response } from 'express';
       },
 
       /* formatError: (error: T) => {
-  console.log('GRAPHQL ERROR:', error);
+          console.log('GRAPHQL ERROR:', error);
 
-  console.log('originalError:', error?.originalError);
+          console.log('originalError:', error?.originalError);
 
-  console.log(
-    'originalError response:',
-    (error?.originalError as any)?.response
-  );
+          console.log(
+            'originalError response:',
+            (error?.originalError as any)?.response
+          );
 
-  console.log(
-    'originalError message:',
-    (error?.originalError as any)?.message
-  );
+          console.log(
+            'originalError message:',
+            (error?.originalError as any)?.message
+          );
 
-  const response =
-    (error?.originalError as any)?.response;
+          const response =
+            (error?.originalError as any)?.response;
 
-  return {
-    code: error?.extensions?.code,
-    message:
-      response?.message ||
-      error?.extensions?.exception?.response?.message ||
-      error?.extensions?.response?.message ||
-      error?.message,
-  };
-}, */
+          return {
+            code: error?.extensions?.code,
+            message:
+              response?.message ||
+              error?.extensions?.exception?.response?.message ||
+              error?.extensions?.response?.message ||
+              error?.message,
+          };
+        }, */
 
     }), 
     ComponentsModule, 
-    DatabaseModule,
+    DatabaseModule, SocketModule,
   ],
   controllers: [AppController],
   providers: [AppService, AppResolver],
