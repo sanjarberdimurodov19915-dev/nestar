@@ -18,7 +18,7 @@ import { response } from 'express';
       playground: true,
       uploads: false,
       autoSchemaFile: true,
-      /* formatError: (error: T) => {
+      formatError: (error: T) => {
         // console.log('error:', error);
         const graphQLFormattedError = {
           code: error?.extensions.code,
@@ -27,9 +27,9 @@ import { response } from 'express';
         };
         console.log('GRAPHQL GLOBAL ERR:', graphQLFormattedError);
         return graphQLFormattedError;
-      }, */
+      },
 
-      formatError: (error: T) => {
+      /* formatError: (error: T) => {
   console.log('GRAPHQL ERROR:', error);
 
   console.log('originalError:', error?.originalError);
@@ -55,7 +55,7 @@ import { response } from 'express';
       error?.extensions?.response?.message ||
       error?.message,
   };
-},
+}, */
 
     }), 
     ComponentsModule, 
