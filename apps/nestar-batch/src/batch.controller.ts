@@ -1,6 +1,5 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Logger  } from '@nestjs/common';
 import { BatchService } from './batch.service';
-import { Logger } from '@nestjs/common';
 import { Cron, Interval, Timeout } from '@nestjs/schedule';
 import { BATCH_ROLLBACK, BATCH_TOP_PROPERTIES, BATCH_TOP_AGENTS } from './lib/config';
 
@@ -16,7 +15,7 @@ export class BatchController {
     this.logger.debug('batch Server Ready!');
   }
 
-  @Cron('00 * * * * *', {name: BATCH_ROLLBACK})
+  @Cron('00 00 01 * * *', {name: BATCH_ROLLBACK})
   public async batchRollback() {
     try {
       this.logger['context'] = BATCH_ROLLBACK;
@@ -28,7 +27,7 @@ export class BatchController {
     
   }
 
-  @Cron('20 * * * * *', {name: BATCH_TOP_PROPERTIES})
+  @Cron('20 00 01 * * *', {name: BATCH_TOP_PROPERTIES})
   public async batchTopProperties() {
     try {
       this.logger['context'] = BATCH_TOP_PROPERTIES;
@@ -40,7 +39,7 @@ export class BatchController {
    
   }
 
-  @Cron('40 * * * * *', {name: BATCH_TOP_AGENTS})
+  @Cron('40 00 01 * * *', {name: BATCH_TOP_AGENTS})
   public async batchTopAgents() {
     try {
       this.logger['context'] = BATCH_TOP_AGENTS;
